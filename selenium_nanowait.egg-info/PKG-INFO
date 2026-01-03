@@ -1,3 +1,19 @@
+Metadata-Version: 2.4
+Name: selenium-nanowait
+Version: 0.1.0
+Summary: Adaptive, resilient waits for Selenium powered by nano-wait
+Author: Luiz Seabra
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: nano-wait>=4.0.0
+Requires-Dist: selenium>=4.0.0
+Dynamic: license-file
+
 # selenium-nanowait
 
 **Adaptive, state-based waiting utilities for Selenium — built on NanoWait**

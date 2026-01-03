@@ -1,0 +1,2 @@
+nano-wait>=4.0.0
+selenium>=4.0.0
