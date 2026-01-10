@@ -1,8 +1,11 @@
 """
-Este arquivo existe para futura integração direta com nano-wait core:
-- métricas
-- backoff adaptativo
-- aprendizado por seletor
+Adapter layer for future deep integration with nano-wait core.
+
+Planned features:
+- Execution metrics
+- Adaptive backoff strategies
+- Selector-based learning
+- Cross-test stabilization profiles
 """
 
-# placeholder intencional
+# Placeholder intentionally left for future expansion
