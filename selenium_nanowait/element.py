@@ -12,32 +12,34 @@ class AdaptiveElement:
     and DOM-ready state before interaction.
     """
 
-    def __init__(self, driver, selector, timeout=None, nano_kwargs=None):
+    def __init__(self, driver, selector, timeout=None, nano_kwargs=None, test_context=None):
         self.driver = driver
         self.selector = selector
         self.timeout = timeout or 5.0
         self.nano_kwargs = nano_kwargs or {}
+        self.test_context = test_context
+        self._cached_element = None
 
     def _find(self):
+        if self._cached_element is not None:
+            return self._cached_element
         return self.driver.find_element(By.CSS_SELECTOR, self.selector)
 
     def _is_ready(self, last_box):
         try:
-            el = self._find()
+            el = self.driver.find_element(By.CSS_SELECTOR, self.selector)
 
-            # Element must be visible
             if not is_visible(el):
                 return False, last_box
 
-            # DOM must be fully loaded
             if not dom_ready(self.driver):
                 return False, last_box
 
-            # Element must be layout-stable
             box = el.rect
             if last_box is None or box != last_box:
                 return False, box
 
+            self._cached_element = el
             return True, box
 
         except StaleElementReferenceException:
@@ -55,14 +57,14 @@ class AdaptiveElement:
             if ready:
                 return
 
-            # 🔑 Adaptive wait powered by nano-wait
             wait(
-                0.1,  # minimal base time
+                0.1,
                 **self.nano_kwargs
             )
 
         raise TimeoutError(
-            f"Element '{self.selector}' did not reach a stable, visible, DOM-ready state."
+            f"[selenium-nanowait] Element '{self.selector}' "
+            f"not ready after {self.timeout}s"
         )
 
     def click(self):
@@ -81,8 +83,5 @@ class AdaptiveElement:
         return self
 
     def raw(self):
-        """
-        Returns the raw Selenium element after stabilization.
-        """
         self._wait_until_ready()
         return self._find()
