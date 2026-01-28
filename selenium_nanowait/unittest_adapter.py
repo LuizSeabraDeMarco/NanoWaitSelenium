@@ -3,7 +3,7 @@ from .config import configure
 
 class NanoWaitTestCaseMixin:
     """
-    Mixin for unittest.TestCase integration.
+    unittest integration for selenium-nanowait.
     """
 
     def setUp(self):

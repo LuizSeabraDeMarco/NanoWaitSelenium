@@ -1,6 +1,6 @@
 def dom_ready(driver):
     """
-    Checks if the DOM is fully loaded.
+    Returns True if the DOM is fully loaded.
     """
     try:
         return driver.execute_script(
@@ -12,7 +12,7 @@ def dom_ready(driver):
 
 def is_visible(element):
     """
-    Checks if an element is visible to the user.
+    Returns True if the element is visible to the user.
     """
     try:
         return element.is_displayed()

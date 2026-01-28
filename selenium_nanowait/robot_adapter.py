@@ -1,6 +1,6 @@
 class NanoWaitLibrary:
     """
-    Robot Framework adapter for selenium-nanowait.
+    Robot Framework adapter.
     """
 
     def wait_for(self, driver, selector, timeout=None):

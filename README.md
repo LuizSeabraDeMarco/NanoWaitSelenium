@@ -1,48 +1,56 @@
 # selenium-nanowait
 
-Sincronização adaptativa baseada em estado para Selenium — alimentada pelo motor NanoWait.
+State-based adaptive synchronization for Selenium — powered by the NanoWait engine.
 
-## 🚀 O que é o `selenium-nanowait`?
+## 🚀 What is `selenium-nanowait`?
 
-`selenium-nanowait` é uma biblioteca de suporte para Selenium que **elimina esperas frágeis baseadas em tempo**, sincronizando as ações do navegador com o estado real da página, e não com *timeouts* arbitrários.
+`selenium-nanowait` is a support library for Selenium that **eliminates fragile time-based waits**, synchronizing browser actions with the actual page state, not with arbitrary *timeouts*.
 
-Em vez de adivinhar quanto tempo esperar (`time.sleep(5)` ou `WebDriverWait(10)`), o `selenium-nanowait` aguarda o que realmente importa:
+Instead of guessing how long to wait (`time.sleep(5)` or `WebDriverWait(10)`), `selenium-nanowait` waits for what really matters:
 
-*   **Visibilidade do elemento**
-*   **Estabilidade do layout** (posição e tamanho constantes)
-*   **Prontidão do DOM** (`document.readyState === "complete"`)
+* **Element visibility**
+* **Layout stability** (constant position and size)
+* **DOM readiness** (`document.readyState === "complete"`)
 
-Além disso, o `selenium-nanowait` foi projetado para integração direta e transparente com *frameworks* de teste, permitindo adoção imediata em ambientes de QA, automação GUI e ensino.
+Furthermore, `selenium-nanowait` is designed for direct and transparent integration with testing frameworks, allowing for immediate adoption in QA, GUI automation, and teaching environments.
 
-Não é um substituto para o Selenium, mas sim uma melhoria direta que funciona lado a lado com seu código existente. Você continua usando o Selenium como sempre fez — o `selenium-nanowait` apenas torna a espera determinística, adaptativa e confiável.
+It's not a replacement for Selenium, but rather a direct enhancement that works alongside your existing code. You continue using Selenium as you always have — `selenium-nanowait` simply makes the wait deterministic, adaptive, and reliable.
 
-## 🧠 Filosofia de Design
+---
 
-O `selenium-nanowait` segue três regras estritas:
+## 🧠 Design Philosophy
 
-1.  **Complementar**, nunca substituir o Selenium.
-2.  **Esperar por estados**, não por tempo.
-3.  **Manter-se explícito**, previsível e *opt-in*.
+`selenium-nanowait` follows three strict rules:
 
-Não há *monkey-patching*, globais ocultos ou *drivers* customizados. A integração com *frameworks* de teste é *plug-and-play*, não invasiva.
+1. **Complementary**, never replace Selenium.
 
-## 🛠️ Instalação
+2. **Wait for states**, not for time.
+
+3. **Remain explicit**, predictable, and *opt-in*.
+
+There is no *monkey-patching*, hidden globals, or custom *drivers*. Integration with testing *frameworks* is *plug-and-play*, non-invasive.
+
+---
+
+## 🛠️ Installation
 
 ```bash
 pip install selenium-nanowait
 ```
 
-### Requisitos
+### Requirements
 
-*   Python ≥ 3.8
-*   Selenium ≥ 4.x
-*   NanoWait ≥ 4.0.0
+* Python ≥ 3.8
+* Selenium ≥ 4.x
+* NanoWait ≥ 4.0.0
 
-## 💡 Início Rápido: A Função `wait_for`
+---
 
-A função `wait_for` é o ponto de entrada principal da biblioteca. Ela encapsula toda a lógica de sincronização adaptativa e retorna um elemento pronto para interação.
+## 💡 Quick Start: The `wait_for` Function
 
-### Antes (Frágil, Baseado em Tempo)
+The `wait_for` function is the main entry point of the library. It encapsulates all the adaptive synchronization logic and returns an element ready for interaction.
+
+### Before (Fragile, Time-Based)
 
 ```python
 import time
@@ -50,156 +58,190 @@ from selenium.webdriver.common.by import By
 
 time.sleep(3)
 driver.find_element(By.ID, "submit").click()
+
 ```
 
-### Depois (Consciente de Estado, Determinístico)
+### After (State-Aware, Deterministic)
 
 ```python
 from selenium_nanowait import wait_for
 
 wait_for(driver, "#submit").click()
+
 ```
 
-## ⚙️ API Principal
+---
+
+## ⚙️ Main API
 
 ### `wait_for()`
 
 ```python
 wait_for(
-    driver,
-    selector: str,
-    *,
-    timeout: float | None = None,
-    **nano_kwargs
-)
+driver,
+selector: str,
+
+*,
+timeout: float | None = None,
+**nano_kwargs
+
 ```
 
-Retorna um `AdaptiveElement`, um *wrapper* leve que estende o comportamento do Selenium sem substituí-lo.
+Returns an `AdaptiveElement`, a lightweight wrapper that extends Selenium's behavior without Replace it.
 
-### Métodos do `AdaptiveElement`
+### `AdaptiveElement` Methods
 
-| Método                  | Descrição                                     | Exemplo                                             |
-| :---------------------- | :-------------------------------------------- | :-------------------------------------------------- |
-| `.click()`              | Aguarda estabilidade e executa o clique.      | `wait_for(driver, "#login").click()`                |
-| `.type(text, clear=True)` | Aguarda prontidão e digita texto.             | `wait_for(driver, "#email").type("user@email.com")` |
-| `.raw()`                | Retorna o `WebElement` nativo do Selenium.    | `el = wait_for(driver, "#submit").raw()`            |
+| Method | Description | Example |
 
-## 🔎 Verificação de Estabilidade Visual
+| ------------------------- | ----------------------------------------- | --------------------------------------------------- |
 
-O elemento só é considerado pronto quando:
+| `.click()` | Waits for stability and executes the click | `wait_for(driver, "#login").click()` |
 
-*   Está visível (`is_displayed`)
-*   O DOM está totalmente carregado
-*   Sua posição e tamanho permanecem constantes entre verificações consecutivas
+| `.type(text, clear=True)` | Waits for readiness and types text | `wait_for(driver, "#email").type("user@email.com")` |
 
-Essa abordagem elimina falhas intermitentes causadas por *layout shifts*, animações ou *reflows* tardios.
+| `.raw()` | Returns the native Selenium `WebElement` | `el = wait_for(driver, "#submit").raw()` |
 
-## 🧪 Integração Plug-and-Play com Frameworks de Teste
+---
 
-O `selenium-nanowait` foi projetado para adoção imediata em ambientes de teste, sem exigir configuração manual ou alterações estruturais no projeto.
+## 🔎 Visual Stability Check
 
-### ✅ Pytest (Automático)
+An element is only considered ready when:
 
-Basta instalar a biblioteca. Nenhuma *fixture* ou *setup* adicional é necessário.
+* It is visible (`is_displayed`)
+* The DOM is fully loaded
+* Its position and size remain constant between consecutive checks
+
+This approach eliminates intermittent failures caused by layout shifts, animations, or late reflows.
+
+--
+
+## 🧪 Plug-and-Play Integration with Testing Frameworks
+
+`selenium-nanowait` is designed for immediate adoption in testing environments, without requiring manual configuration or structural changes to the project.
+
+### ✅ Pytest (Automatic)
 
 ```python
 def test_login(driver):
-    wait_for(driver, "#login").click()
+
+wait_for(driver, "#login").click()
+
 ```
 
-O *plugin* do *pytest* é carregado automaticamente via *entrypoint*, permitindo futuras extensões como:
+The Pytest plugin is automatically loaded via entrypoint, allowing future extensions such as:
 
-*   *screenshots* automáticos em falhas
-*   *logs* por teste
-*   integração com relatórios
+* automatic screenshots on failures
+* logs per test
+* integration with reports
 
-### ✅ unittest (Mixin opcional)
+### ✅ unittest (Optional Mixin)
 
 ```python
 from selenium_nanowait.unittest_adapter import NanoWaitTestCaseMixin
 
 class TestUI(NanoWaitTestCaseMixin, unittest.TestCase):
-    ...
+
+...
 ```
 
 ### ✅ Robot Framework
 
 ```robotframework
-Wait For    css:#submit
+Wait For css:#submit
 ```
 
-## ⚙️ Configuração Global (Opcional)
+---
+
+## ⚙️ Global Configuration (Optional)
 
 ```python
 from selenium_nanowait import configure
 
 configure(
-    default_timeout=10,
-    nano_kwargs={"smart": True, "verbose": False}
-)
-```
-
-A configuração é aplicada globalmente, respeitando a filosofia *opt-in*.
-
-## 🧠 Por que o `selenium-nanowait` é diferente?
-
-| Característica        | ❌ Waits Tradicionais | ✅ `selenium-nanowait` |
-| :-------------------- | :-------------------- | :--------------------- |
-| Base                  | Tempo fixo            | Estado real da página  |
-| Escopo                | Global/condicional    | Elemento adaptativo    |
-| Espera                | Estimativa            | *Backoff* adaptativo   |
-| Robustez              | Frágil                | Consciente de *layout* |
-| Integração QA         | Manual                | *Plug-and-play*        |
-
-## ⏱️ Espera Adaptativa (NanoWait)
-
-O motor NanoWait:
-
-*   ajusta dinamicamente a frequência de *polling*
-*   evita *busy-waiting*
-*   adapta-se ao desempenho do sistema
-
-## 🔬 Diagnósticos Determinísticos
-
-Em vez de erros genéricos, o `selenium-nanowait` fornece mensagens claras e reproduzíveis:
+default_timeout=10,
+nano_kwargs={"smart": True, "verbose": False}
 
 ```
-"[selenium-nanowait] Element '#submit' not ready after 5s — layout remained unstable."
-```
 
-## 🧑‍💻 Exemplos Avançados
-
-### Parâmetros customizados
-
-```python
-wait_for(
-    driver,
-    "#email",
-    timeout=5,
-    smart=True,
-    speed="fast"
-).type("usuario@email.com")
-```
-
-### Aplicações SPA (React, Vue, Next.js)
-
-```python
-wait_for(driver, "button.submit", verbose=True).click()
-```
-
-## 📦 Metadados do Projeto
-
-*   **Licença**: MIT
-*   **Autor**: Luiz Filipe Seabra de Marco
-*   **Status**: Pronto para produção (v0.3)
-*   **Resumo**: `selenium-nanowait` faz o Selenium esperar pela realidade, não pelo relógio — e agora, se integra naturalmente aos principais *frameworks* de teste.
+The configuration is applied globally, respecting the *opt-in* philosophy.
 
 ---
 
-## ✨ Ajude a Crescer o Projeto!
+## 🔬 NEW: Stateful Deterministic Diagnostics
 
-Se você achou `selenium-nanowait` útil para seus projetos de automação, por favor, considere dar uma estrela (⭐️) no nosso repositório no GitHub! Seu apoio nos ajuda a ganhar visibilidade e a continuar desenvolvendo e melhorando a biblioteca.
+`selenium-nanowait` can generate **deterministic diagnostic reports** when a wait fails, explaining *why* the element did not become ready.
 
-Adoramos contribuições! Seja reportando *bugs*, sugerindo novas funcionalidades, escrevendo documentação ou enviando *pull requests*, sua participação é muito bem-vinda. Junte-se à nossa comunidade e ajude a moldar o futuro do `selenium-nanowait`!
+### Enabling Diagnostics
 
-[Visite o repositório no GitHub](https://github.com/LuizSeabraDeMarco/NanoWaitSelenium) (substitua pelo link real do seu repositório)
+```python
+from selenium_nanowait import configure
+
+configure(diagnostic=True)
+
+```
+
+When enabled, the library logs a **state timeline** during the wait.
+
+### Example of error generated
+
+```text
+[selenium-nanowait] Timeout waiting for element '#submit'
+Timeout: 5.00s
+
+Timeline: 
+- INIT @ 0ms 
+- DOM_LOADING @ 140ms 
+-NOT_VISIBLE @ 780ms
+
+- UNSTABLE_LAYOUT @ 2200ms
+
+- UNSTABLE_LAYOUT @ 4100ms
+
+This report makes UI crashes:
+
+* **explainable**
+* **reproducible**
+* **diagnosable in CI**
+
+No generic *logs* or blind *timeouts*.
+
+> 💡 Diagnostics are fully *opt-in* and do not affect performance when disabled.
+
+---
+
+## ⏱️ Adaptive Waiting (NanoWait)
+
+The NanoWait engine:
+
+* dynamically adjusts the *polling* frequency
+* avoids *busy-waiting*
+* adapts to system performance
+
+---
+
+## 🧠 Why is `selenium-nanowait` different?
+
+| Feature | ❌ Traditional Waits | ✅ `selenium-nanowait` |
+
+| -------------- | -------------------- | ---------------------- |
+
+| Base | Fixed time | Actual page state |
+
+| Scope | Global/conditional | Adaptive element |
+
+| Wait | Estimate | Adaptive backoff |
+
+| Robustness | Fragile | Layout-aware |
+
+| Diagnostic | Non-existent | Deterministic |
+
+| QA Integration | Manual | Plug-and-play |
+
+---
+
+## 📦 Project Metadata
+
+* **License**: MIT
+* **Author**: Luiz Filipe Seabra de Marco
+* **Status**: Production ready (v0.4)
+* **Summary**: `selenium-nanowait` makes Selenium wait for reality — and now explains when it doesn't happen.

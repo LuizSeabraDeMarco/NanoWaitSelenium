@@ -7,7 +7,9 @@ selenium_nanowait/conditions.py
 selenium_nanowait/config.py
 selenium_nanowait/element.py
 selenium_nanowait/pytest_plugin.py
+selenium_nanowait/report.py
 selenium_nanowait/robot_adapter.py
+selenium_nanowait/states.py
 selenium_nanowait/unittest_adapter.py
 selenium_nanowait/wait.py
 selenium_nanowait.egg-info/PKG-INFO
